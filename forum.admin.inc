@@ -7,22 +7,27 @@
 function forum_admin_settings() {
   
   dd_set_breadcrumb(array(l(t('forum', '论坛设置'), 'admin/forum/settings')));
+
+  $form['fields']['forum']['site_menu'] = array(
+    '#title' => t('forum', '导航显示'),
+    '#default_value' => var_get_key('forum', 'site_menu', 1),
+    '#options' => array(t('forum', '否'), t('forum', '是')),
+    '#type' => 'radio'
+  );
+
+  $form['fields']['button'] = array(
+    '#type' => 'submit',
+    '#submit' => 'forum_admin_settings_submit'
+  );
+
+  $form['settings'] = array(
+    '#validata' => array('forum_admin_setting_validate'),
+  );
   return $form; 
 }
 
 function forum_admin_settings_validate($form, $v) {
-  if (!is_numeric($v['og']['name_max'])) {
-    $t['og']['name_max']['#error'][] = t('og', '只能是数字');
-  } else if (!is_numeric($v['og']['des_max'])) {
-    $t['og']['des_max']['#error'][] = t('og', '只能是数字');
-  } else if ($v['og']['role_limit']) {
-    foreach ($v['og']['role_limit'] as $rid => $value) {
-      if ($value && !is_numeric($value)) {
-        $t['og']['role_limit'][$rid]['#error'][] = t('og', '只能是数字');
-      }
-    }
-  }
-  return $t;
+
 }
 
 function forum_admin_settings_submit($form, $v) {

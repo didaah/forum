@@ -65,7 +65,7 @@ function forum_term_save(&$term, $validate = true, &$error = NULL) {
 /**
  * @Implement of hook_forum_term_save()
  */
-function forum_forum_term_save(&$term) {
+function forum_forum_term_save($term) {
   /**
    * 缓存版块版主信息，将所有版主信息写入 forum_term.data['admin']，提升效率
    * 若增删版主后未及时更新，可能导致浏览页面版主信息滞后
@@ -389,6 +389,9 @@ function forum_node_set_count($fid) {
  * @Implement of hook_site_menu()
  */
 function forum_site_menu(&$menu) {
+
+  if (!var_get_key('forum', 'site_menu', 1)) return;
+
   if (user_access('forum add')) {
     global $user;
     $menu['forum']['#data'] = l(t('forum', '我的论坛'), 'forum');
@@ -400,6 +403,7 @@ function forum_site_menu(&$menu) {
   } else if (user_access('forum view')) {
     $menu['forum']['#data'] = l(t('forum', '论坛'), 'forum');
   }
+
 }
 
 /**
@@ -781,7 +785,7 @@ function forum_system_admin_menus() {
     //array(t('forum', '回复管理'), 'admin/forum/reply'),
     array(t('forum', '版块管理'), 'admin/forum/term'),
     //array(t('forum', '版主管理'), 'admin/forum/admin'),
-    //array(t('forum', '论坛设置'), 'admin/forum/settings'),
+    array(t('forum', '论坛设置'), 'admin/forum/settings'),
     //array(t('forum', '论坛统计'), 'admin/forum/statistics'),
   ), t('forum', '论坛管理'));
 }
